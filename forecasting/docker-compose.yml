@@ -1,0 +1,48 @@
+services:
+  chronos:
+    build: ./Chronos
+    ports: ["8001:8000"]
+    networks:
+      - mysql_network
+    environment:
+      - MYSQL_HOST=mysql_db
+  timesfm:
+    build: ./TimesFM
+    ports: ["8002:8000"]
+    networks:
+      - mysql_network
+    environment:
+      - MYSQL_HOST=mysql_db
+  deepar:
+    build: ./DeepAR
+    ports: ["8003:8000"]
+    networks:
+      - mysql_network
+    environment:
+      - MYSQL_HOST=mysql_db	  
+  nbeats:
+    build: ./DeepAR
+    ports: ["8004:8000"]
+    networks:
+      - mysql_network
+    environment:
+      - MYSQL_HOST=mysql_db
+  nhits:
+    build: ./DeepAR
+    ports: ["8005:8000"]
+    networks:
+      - mysql_network
+    environment:
+      - MYSQL_HOST=mysql_db
+  tft:
+    build: ./TFT
+    ports: ["8006:8000"]
+    networks:
+      - mysql_network
+    environment:
+      - MYSQL_HOST=mysql_db
+
+networks:
+  mysql_network:
+    external: true
+    name: homolog_default

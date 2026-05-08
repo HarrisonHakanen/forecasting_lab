@@ -1,0 +1,49 @@
+Livros:
+	Advances in Financial Machine Learning
+	Time Series Forecasting Using Foundation Models
+
+
+Artigos:
+	https://towardsdatascience.com/moirai-time-series-foundation-models-for-universal-forecasting-dc93f74b330f/
+
+
+Modelos pré treinados:
+	|Chronos
+	|N-BEATS
+	|TimesFm
+	|NHiTS
+	|DeepAR
+	|TFT
+	
+	
+Como extrair uma decisão concreta
+Estratégia 1 — Votação simples (mínimo viável)
+Cada modelo emite sinal (+1, 0, -1). Some os votos:
+
+≥ 4 modelos dizem +1 → Compra com convicção
+≥ 4 modelos dizem -1 → Evitar/Venda
+Qualquer outro resultado → Neutro (não opera)
+Isso resolve o problema de modelos divergentes: você só entra quando a maioria concorda.
+
+Estratégia 2 — Votação ponderada por confiabilidade
+Modelos probabilísticos merecem mais peso quando o intervalo de confiança não cruza zero — significa que até no cenário pessimista o modelo ainda prevê alta:
+
+peso_deepar  = 2  se lower_q10 > 0, senão 1
+peso_tft     = 2  se TFT-lo-80 > 0, senão 1
+peso_nhits   = 1  (ponto fixo)
+peso_nbeats  = 1  (ponto fixo)
+peso_timesfm = 1  (ponto fixo)
+peso_chronos = 1  (ponto fixo)
+
+score = soma(peso * sinal) / soma(pesos)
+
+
+Estratégia 3 — Hierarquia de confirmação (mais conservadora)
+Foundation models (TimesFM, Chronos) = filtro macro → se ambos dizem neutro/baixa, não analisa
+Tendência (N-HiTS, N-BEATS) = direção da série
+Risco (DeepAR, TFT) = confirmação com intervalo de confiança → só entra se o q10 (pior caso) ainda for positivo
+Qual confiar mais?
+Ativo novo / poucos dados históricos → confie mais em TimesFM e Chronos (zero-shot)
+Ativo com histórico longo → confie mais em TFT e DeepAR (aprendem o padrão específico)
+Sinal de tendência pura → N-HiTS > N-BEATS (mais moderno)
+Gestão de risco / não querer ser surpreso → DeepAR e TFT (os únicos que dizem "existe X% de chance de queda")

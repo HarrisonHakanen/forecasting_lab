@@ -1,0 +1,7 @@
+darts[torch]==0.44.0
+ipywidgets==8.1.8
+torch==2.11.0
+SQLAlchemy==2.0.49
+mysql-connector-python==9.7.0
+fastapi==0.136.1
+uvicorn==0.34.0
